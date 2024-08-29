@@ -68,13 +68,13 @@ const images = [
 
 const gallery = document.querySelector('.gallery');
 
-const addImages = images.map((image) => `<li class="gallery-item">
-<a class="gallery-link" href=${image.original}>
+const addImages = images.map(({preview, original, description}) => `<li class="gallery-item">
+<a class="gallery-link" href=${original}>
     <img
     class="gallery-image"
-    src=${image.preview}
-    data-source=${image.original}
-    alt=${image.description}
+    src=${preview}
+    data-source=${original}
+    alt=${description}
     width:"360p"
     height:"200"
     />
@@ -83,11 +83,27 @@ const addImages = images.map((image) => `<li class="gallery-item">
 
 gallery.insertAdjacentHTML("afterbegin", addImages);
 
-gallery.addEventListener("click", function (event) {
-    event.preventDefault();
-});
-    
 
-gallery.addEventListener("click", function (event) {
-console.log(event.target);
-});
+
+gallery.addEventListener("click", clickOnCard);
+
+function clickOnCard(event) {
+
+    event.preventDefault();
+    console.log(event.target);
+    console.log(event.currentTarget);
+
+    if (event.target === event.currentTarget) {
+        return;
+    }
+
+    const valueEl = event.target.dataset.source;
+    console.log(valueEl);
+
+    const instance = basicLightbox.create(`
+		<img src="${valueEl}" width="1112" height="640">
+	`);
+
+	instance.show();
+}
+
